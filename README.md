@@ -1,6 +1,6 @@
 ## Homebrew Tap for Knative client `kn`
 
-This repository contains the [Hombrew Tap]() for Knative clients.
+This repository contains the [Hombrew Tap](https://docs.brew.sh/Taps) for Knative clients.
 
 To enable this Tap globally, use
 
