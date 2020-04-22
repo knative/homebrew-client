@@ -1,6 +1,6 @@
 require "FileUtils"
 
-class Kn < Formula
+class KnAT013 < Formula
   homepage "https://github.com/knative/client"
 
   v = "v0.13.2"
