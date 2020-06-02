@@ -3,10 +3,10 @@ require "FileUtils"
 class Kn < Formula
   homepage "https://github.com/knative/client"
 
-  v = "v0.15.0"
+  v = "v0.14.0"
   url "https://github.com/knative/client/releases/download/#{v}/kn-darwin-amd64"
   version v
-  sha256 "1ebc49f23fde8760051acf0ec62a20cc66274b1f24d02f105960119b982bcf15"
+  sha256 "23ebdc0c675f13642ba54ee7d53350404eaa01a338e15741622b72f50ecce519"
 
   def install
     FileUtils.mv("kn-darwin-amd64", "kn")
