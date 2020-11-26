@@ -7,7 +7,7 @@ end
 class KnAT017 < Formula
   homepage "https://github.com/knative/client"
 
-  v = "v0.17.3"
+  v = "v0.17.4"
   version v
 
   if OS.mac?
