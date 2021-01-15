@@ -7,15 +7,15 @@ end
 class Kn < Formula
   homepage "https://github.com/knative/client"
 
-  v = "v0.20.0"
+  v = "v0.19.1"
   version v
 
   if OS.mac?
     url "https://github.com/knative/client/releases/download/#{v}/kn-darwin-amd64"
-    sha256 "2a55ba0539444389c24186818e5b0b9ef77113a02f2e745ff3cbb0656c98c8ec"
+    sha256 "1ec3f600501cf4caf8d5e203ec967f67836c50230ded7bce4fd72193de722f5c"
   else
     url "https://github.com/knative/client/releases/download/#{v}/kn-linux-amd64"
-    sha256 "3bcc486df7849799d6765f3ba41720139545127651630ddc5cc2a81cb74818d5"
+    sha256 "e6b5b4a556a4bec77ab70ef0c4436f66ae828a04461849c299354584f78518aa"
   end
 
   def install
