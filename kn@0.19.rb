@@ -4,7 +4,7 @@ else
   require "fileutils"
 end
 
-class Kn < Formula
+class KnAT019 < Formula
   homepage "https://github.com/knative/client"
 
   v = "v0.19.1"
