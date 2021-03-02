@@ -4,18 +4,18 @@ else
   require "fileutils"
 end
 
-class Kn < Formula
+class KnAT020 < Formula
   homepage "https://github.com/knative/client"
 
-  v = "v0.21.0"
+  v = "v0.20.0"
   version v
 
   if OS.mac?
     url "https://github.com/knative/client/releases/download/#{v}/kn-darwin-amd64"
-    sha256 "6daa5a9f1108b71bfcd22f293494f6b4bfd6d2937f76e8f7ba48e1d969e68d31"
+    sha256 "2a55ba0539444389c24186818e5b0b9ef77113a02f2e745ff3cbb0656c98c8ec"
   else
     url "https://github.com/knative/client/releases/download/#{v}/kn-linux-amd64"
-    sha256 "f57427f523b2d882af796a87be47ffb061c2c0a0543b851af74f58ac2945f910"
+    sha256 "3bcc486df7849799d6765f3ba41720139545127651630ddc5cc2a81cb74818d5"
   end
 
   def install
