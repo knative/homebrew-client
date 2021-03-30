@@ -1,8 +1,4 @@
-if OS.mac?
-  require "FileUtils"
-else
-  require "fileutils"
-end
+require "fileutils"
 
 class KnAT018 < Formula
   homepage "https://github.com/knative/client"
