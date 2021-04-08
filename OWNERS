@@ -1,4 +1,5 @@
 approvers:
+# TODO: adopt OWNERS_ALIASES
 - sixolet
 - rhuss
 - maximilien
