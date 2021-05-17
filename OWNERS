@@ -5,5 +5,5 @@ approvers:
 - maximilien
 - navidshaikh
 # TOC members as a fallback
-- mattmoor
-- evankanderson
+- technical-oversight-committee
+- knative-release-leads
