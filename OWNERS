@@ -1,9 +1,5 @@
 approvers:
-# TODO: adopt OWNERS_ALIASES
-- sixolet
-- rhuss
-- maximilien
-- navidshaikh
-# TOC members as a fallback
+- client-writers
 - technical-oversight-committee
 - knative-release-leads
+
