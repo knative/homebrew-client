@@ -16,9 +16,15 @@
 
 set -e
 
-CURRENT_RELEASE=${CURRENT_RELEASE:-1.5}
-PREVIOUS_RELEASE=${PREVIOUS_RELEASE:-1.4}
+if [ -z "$CURRENT_RELEASE" ]; then
+    echo 'Please provide a value for $CURRENT_RELEASE'
+    exit 1
+fi
 
+if [ -z "$PREVIOUS_RELEASE" ]; then
+    echo 'Please provide a value for $PREVIOUS_RELEASE'
+    exit 1
+fi
 
 echo "Updating kn from $PREVIOUS_RELEASE to $CURRENT_RELEASE"
 newfile="kn.rb"
@@ -28,11 +34,11 @@ echo "Create formula for previous release"
 cp "$newfile" "$oldfile"
 class_version=${PREVIOUS_RELEASE//.}
 class_name="Kn"
-sed -i 's/class '"${class_name}"' < Formula/class '"${class_name}"'AT'"$class_version"' < Formula/' "$oldfile"
+sed -i -r "s/class\s+${class_name}\s+<\s+Formula/class ${class_name}AT${class_version} < Formula/" "$oldfile"
 echo "$oldfile created"
 
 echo "Creating formula for current release"
-sed -i 's/v'"${PREVIOUS_RELEASE}"'/v'"$CURRENT_RELEASE"'/g' "$newfile"
+sed -i "s/v${PREVIOUS_RELEASE}/v${CURRENT_RELEASE}/g" "$newfile"
 
 # change shas for mac and linux
 checksums=$(mktemp)
