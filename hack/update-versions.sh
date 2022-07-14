@@ -26,16 +26,45 @@ if [ -z "$PREVIOUS_RELEASE" ]; then
     exit 1
 fi
 
+if [ ${CURRENT_RELEASE} = ${PREVIOUS_RELEASE} ]; then
+    echo 'Nothing to do.'
+    exit 0
+fi
+
+IFS='.'
+read -ra newversion <<< "$CURRENT_RELEASE"
+read -ra oldversion <<< "$PREVIOUS_RELEASE"
+unset IFS
+
+# validate
+if [ -z ${newversion[0]} ] || [ -z ${newversion[1]} ] || [ -z ${newversion[2]} ]; then
+    echo 'Please enter a valid value for $CURRENT_RELEASE in the form: x.y.z'
+    exit 1
+fi
+
+if [ -z ${oldversion[0]} ] || [ -z ${oldversion[1]} ] || [ -z ${oldversion[2]} ]; then
+    echo 'Please enter a valid value for $PREVIOUS_RELEASE in the form: x.y.z'
+    exit 1
+fi 
+
+NEW_SHORT="${newversion[0]}.${newversion[1]}"
+NEW_PATCH="${newversion[2]}"
+OLD_SHORT="${oldversion[0]}.${oldversion[1]}"
+OLD_PATCH="${oldversion[2]}"
+
 echo "Updating kn from $PREVIOUS_RELEASE to $CURRENT_RELEASE"
 newfile="kn.rb"
-oldfile="kn@${PREVIOUS_RELEASE}.rb"
+oldfile="kn@${OLD_SHORT}.rb"
 
-echo "Create formula for previous release"
-cp "$newfile" "$oldfile"
-class_version=${PREVIOUS_RELEASE//.}
-class_name="Kn"
-sed -i -r "s/class\s+${class_name}\s+<\s+Formula/class ${class_name}AT${class_version} < Formula/" "$oldfile"
-echo "$oldfile created"
+# if patch release update, then we just need to update the existing kn.rb file
+if [ $NEW_SHORT != $OLD_SHORT ]; then
+    echo "Create formula for previous release"
+    cp "$newfile" "$oldfile"
+    class_version=${OLD_SHORT//.}
+    class_name="Kn"
+    sed -i -r "s/class\s+${class_name}\s+<\s+Formula/class ${class_name}AT${class_version} < Formula/" "$oldfile"
+    echo "$oldfile created"
+fi
 
 echo "Creating formula for current release"
 sed -i "s/v${PREVIOUS_RELEASE}/v${CURRENT_RELEASE}/g" "$newfile"
@@ -43,8 +72,8 @@ sed -i "s/v${PREVIOUS_RELEASE}/v${CURRENT_RELEASE}/g" "$newfile"
 # change shas for mac and linux
 checksums=$(mktemp)
 old_checksums=$(mktemp)
-curl -L "https://github.com/knative/client/releases/download/knative-v${CURRENT_RELEASE}.0/checksums.txt" > "$checksums"
-curl -L "https://github.com/knative/client/releases/download/knative-v${PREVIOUS_RELEASE}.0/checksums.txt" > "$old_checksums"
+curl -L "https://github.com/knative/client/releases/download/knative-v${CURRENT_RELEASE}/checksums.txt" > "$checksums"
+curl -L "https://github.com/knative/client/releases/download/knative-v${PREVIOUS_RELEASE}/checksums.txt" > "$old_checksums"
 darwin_checksum=$(awk '$2=="kn-darwin-amd64"{print $1}' "$checksums")
 darwin_old_checksum=$(awk '$2=="kn-darwin-amd64"{print $1}' "$old_checksums")
 sed -i 's/sha256 "'"$darwin_old_checksum"'"/sha256 "'"$darwin_checksum"'"/' "$newfile"
