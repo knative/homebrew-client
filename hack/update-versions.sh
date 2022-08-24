@@ -62,12 +62,12 @@ if [ $NEW_SHORT != $OLD_SHORT ]; then
     cp "$newfile" "$oldfile"
     class_version=${OLD_SHORT//.}
     class_name="Kn"
-    sed -i -r "s/class\s+${class_name}\s+<\s+Formula/class ${class_name}AT${class_version} < Formula/" "$oldfile"
+    sed -i '' -r "s/class\s+${class_name}\s+<\s+Formula/class ${class_name}AT${class_version} < Formula/" "$oldfile"
     echo "$oldfile created"
 fi
 
 echo "Creating formula for current release"
-sed -i "s/v${PREVIOUS_RELEASE}/v${CURRENT_RELEASE}/g" "$newfile"
+sed -i '' "s/v${PREVIOUS_RELEASE}/v${CURRENT_RELEASE}/g" "$newfile"
 
 # change shas for mac and linux
 checksums=$(mktemp)
@@ -76,10 +76,10 @@ curl -L "https://github.com/knative/client/releases/download/knative-v${CURRENT_
 curl -L "https://github.com/knative/client/releases/download/knative-v${PREVIOUS_RELEASE}/checksums.txt" > "$old_checksums"
 darwin_checksum=$(awk '$2=="kn-darwin-amd64"{print $1}' "$checksums")
 darwin_old_checksum=$(awk '$2=="kn-darwin-amd64"{print $1}' "$old_checksums")
-sed -i 's/sha256 "'"$darwin_old_checksum"'"/sha256 "'"$darwin_checksum"'"/' "$newfile"
+sed -i '' 's/sha256 "'"$darwin_old_checksum"'"/sha256 "'"$darwin_checksum"'"/' "$newfile"
 linux_checksum=$(awk '$2=="kn-linux-amd64"{print $1}' "$checksums")
 linux_old_checksum=$(awk '$2=="kn-linux-amd64"{print $1}' "$old_checksums")
-sed -i 's/sha256 "'"$linux_old_checksum"'"/sha256 "'"$linux_checksum"'"/' "$newfile"
+sed -i '' 's/sha256 "'"$linux_old_checksum"'"/sha256 "'"$linux_checksum"'"/' "$newfile"
 
 echo "$newfile created"
 
