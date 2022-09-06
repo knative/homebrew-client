@@ -62,6 +62,9 @@ if [ $NEW_SHORT != $OLD_SHORT ]; then
     cp "$newfile" "$oldfile"
     class_version=${OLD_SHORT//.}
     class_name="Kn"
+    # Flag for backup file with empty value `-i '' is added due to compatibility issue 
+    # between BSD and GNU sed versions.
+    # https://unix.stackexchange.com/questions/401905/bsd-sed-vs-gnu-sed-and-i 
     sed -i '' -r "s/class\s+${class_name}\s+<\s+Formula/class ${class_name}AT${class_version} < Formula/" "$oldfile"
     echo "$oldfile created"
 fi
