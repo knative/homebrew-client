@@ -1,9 +1,9 @@
 require "fileutils"
 
-class Kn < Formula
+class KnAT16 < Formula
   homepage "https://github.com/knative/client"
 
-  v = "knative-v1.7.0"
+  v = "knative-v1.6.0"
   version v
 
   if OS.mac? && Hardware::CPU.intel?
