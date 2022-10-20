@@ -75,14 +75,20 @@ sed -i '' "s/v${PREVIOUS_RELEASE}/v${CURRENT_RELEASE}/g" "$newfile"
 # change shas for mac and linux
 checksums=$(mktemp)
 old_checksums=$(mktemp)
-curl -L "https://github.com/knative/client/releases/download/knative-v${CURRENT_RELEASE}/checksums.txt" > "$checksums"
-curl -L "https://github.com/knative/client/releases/download/knative-v${PREVIOUS_RELEASE}/checksums.txt" > "$old_checksums"
-darwin_checksum=$(awk '$2=="kn-darwin-amd64"{print $1}' "$checksums")
-darwin_old_checksum=$(awk '$2=="kn-darwin-amd64"{print $1}' "$old_checksums")
-sed -i '' 's/sha256 "'"$darwin_old_checksum"'"/sha256 "'"$darwin_checksum"'"/' "$newfile"
-linux_checksum=$(awk '$2=="kn-linux-amd64"{print $1}' "$checksums")
-linux_old_checksum=$(awk '$2=="kn-linux-amd64"{print $1}' "$old_checksums")
-sed -i '' 's/sha256 "'"$linux_old_checksum"'"/sha256 "'"$linux_checksum"'"/' "$newfile"
+curl -fsSL "https://github.com/knative/client/releases/download/knative-v${CURRENT_RELEASE}/checksums.txt" > "$checksums"
+curl -fsSL "https://github.com/knative/client/releases/download/knative-v${PREVIOUS_RELEASE}/checksums.txt" > "$old_checksums"
+darwin_amd64_checksum=$(awk '$2=="kn-darwin-amd64"{print $1}' "$checksums")
+darwin_arm64_checksum=$(awk '$2=="kn-darwin-arm64"{print $1}' "$checksums")
+darwin_amd64_old_checksum=$(awk '$2=="kn-darwin-amd64"{print $1}' "$old_checksums")
+darwin_arm64_old_checksum=$(awk '$2=="kn-darwin-arm64"{print $1}' "$old_checksums")
+sed -i '' 's/sha256 "'"$darwin_amd64_old_checksum"'"/sha256 "'"$darwin_amd64_checksum"'"/' "$newfile"
+sed -i '' 's/sha256 "'"$darwin_arm64_old_checksum"'"/sha256 "'"$darwin_arm64_checksum"'"/' "$newfile"
+linux_amd64_checksum=$(awk '$2=="kn-linux-amd64"{print $1}' "$checksums")
+linux_arm64_checksum=$(awk '$2=="kn-linux-arm64"{print $1}' "$checksums")
+linux_amd64_old_checksum=$(awk '$2=="kn-linux-amd64"{print $1}' "$old_checksums")
+linux_arm64_old_checksum=$(awk '$2=="kn-linux-arm64"{print $1}' "$old_checksums")
+sed -i '' 's/sha256 "'"$linux_amd64_old_checksum"'"/sha256 "'"$linux_amd64_checksum"'"/' "$newfile"
+sed -i '' 's/sha256 "'"$linux_arm64_old_checksum"'"/sha256 "'"$linux_arm64_checksum"'"/' "$newfile"
 
 echo "$newfile created"
 
