@@ -65,12 +65,12 @@ if [ $NEW_SHORT != $OLD_SHORT ]; then
     # Flag for backup file with empty value `-i '' is added due to compatibility issue 
     # between BSD and GNU sed versions.
     # https://unix.stackexchange.com/questions/401905/bsd-sed-vs-gnu-sed-and-i 
-    sed -i '' -r "s/class\s+${class_name}\s+<\s+Formula/class ${class_name}AT${class_version} < Formula/" "$oldfile"
+    sed -i.bak -e "s/class ${class_name} < Formula/class ${class_name}AT${class_version} < Formula/" "$oldfile"
     echo "$oldfile created"
 fi
 
 echo "Creating formula for current release"
-sed -i '' "s/v${PREVIOUS_RELEASE}/v${CURRENT_RELEASE}/g" "$newfile"
+sed -i.bak -e "s/v${PREVIOUS_RELEASE}/v${CURRENT_RELEASE}/" "$newfile"
 
 # change shas for mac and linux
 checksums=$(mktemp)
@@ -81,14 +81,17 @@ darwin_amd64_checksum=$(awk '$2=="kn-darwin-amd64"{print $1}' "$checksums")
 darwin_arm64_checksum=$(awk '$2=="kn-darwin-arm64"{print $1}' "$checksums")
 darwin_amd64_old_checksum=$(awk '$2=="kn-darwin-amd64"{print $1}' "$old_checksums")
 darwin_arm64_old_checksum=$(awk '$2=="kn-darwin-arm64"{print $1}' "$old_checksums")
-sed -i '' 's/sha256 "'"$darwin_amd64_old_checksum"'"/sha256 "'"$darwin_amd64_checksum"'"/' "$newfile"
-sed -i '' 's/sha256 "'"$darwin_arm64_old_checksum"'"/sha256 "'"$darwin_arm64_checksum"'"/' "$newfile"
+sed -i.bak -e 's/sha256 "'"$darwin_amd64_old_checksum"'"/sha256 "'"$darwin_amd64_checksum"'"/' "$newfile"
+sed -i.bak -e 's/sha256 "'"$darwin_arm64_old_checksum"'"/sha256 "'"$darwin_arm64_checksum"'"/' "$newfile"
 linux_amd64_checksum=$(awk '$2=="kn-linux-amd64"{print $1}' "$checksums")
 linux_arm64_checksum=$(awk '$2=="kn-linux-arm64"{print $1}' "$checksums")
 linux_amd64_old_checksum=$(awk '$2=="kn-linux-amd64"{print $1}' "$old_checksums")
 linux_arm64_old_checksum=$(awk '$2=="kn-linux-arm64"{print $1}' "$old_checksums")
-sed -i '' 's/sha256 "'"$linux_amd64_old_checksum"'"/sha256 "'"$linux_amd64_checksum"'"/' "$newfile"
-sed -i '' 's/sha256 "'"$linux_arm64_old_checksum"'"/sha256 "'"$linux_arm64_checksum"'"/' "$newfile"
+sed -i.bak -e 's/sha256 "'"$linux_amd64_old_checksum"'"/sha256 "'"$linux_amd64_checksum"'"/' "$newfile"
+sed -i.bak -e 's/sha256 "'"$linux_arm64_old_checksum"'"/sha256 "'"$linux_arm64_checksum"'"/' "$newfile"
+
+# Remove sed backup files
+rm *.bak
 
 echo "$newfile created"
 
