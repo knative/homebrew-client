@@ -1,23 +1,23 @@
 require "fileutils"
 
-class Kn < Formula
+class KnAT112 < Formula
   homepage "https://github.com/knative/client"
 
-  v = "knative-v1.13.0"
+  v = "knative-v1.12.0"
   version v
 
   if OS.mac? && Hardware::CPU.intel?
     url "https://github.com/knative/client/releases/download/#{v}/kn-darwin-amd64"
-    sha256 "3406ef887cd1e27df6d3f554e044ff6b6bcf2ac7b7c3c039370355bb4f960000"
+    sha256 "8ffb052263454250d46eecba47e64be9be2b4d6ac97abab0c2c503d327693d87"
   elsif OS.mac? && Hardware::CPU.arm?
     url "https://github.com/knative/client/releases/download/#{v}/kn-darwin-arm64"
-    sha256 "81d4d5fa701323894815b772bc5ef44c566c76b5a124296b0c53f1ac27c2bd96"
+    sha256 "f07d70a7c62c107dad399fadb62804979fd99f1957f421c0fc349a9dc64f5153"
   elsif OS.linux? && Hardware::CPU.arm?
     url "https://github.com/knative/client/releases/download/#{v}/kn-linux-arm64"
-    sha256 "de1f6747559fde68ca65a31903ab5f3b0cce7365a28cf997068bbbdaf92069f7"
+    sha256 "3c02f47aaba3533c92ff32a5d02e3ac845b687b4c96735d637b0e810ce8d2a7c"
   else
     url "https://github.com/knative/client/releases/download/#{v}/kn-linux-amd64"
-    sha256 "289eb39dfcb1c7d9b4976db039155347e8305fe484123a2e85c2d48fba751264"
+    sha256 "d8ec5f3beff4b9bccea7b67937370f477537d6188e178a4c36a11162d4d06cf5"
   end
 
   def install
