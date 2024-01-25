@@ -35,3 +35,8 @@ brew untap knative/client --force
 brew tap knative/client
 brew install kn
 ```
+
+## Contributing
+
+If you would like to contribute to Knative, take a look at [CLOTRIBUTOR](https://clotributor.dev/search?project=knative&page=1)
+for a list of help wanted issues in the project.
