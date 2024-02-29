@@ -1,0 +1,30 @@
+name: Homebrew Tests
+
+on:
+  push:
+    branches: [ 'main' ]
+
+  pull_request:
+    branches: [ 'main' ]
+
+jobs:
+  test:
+    name: Verify Install
+    strategy:
+      matrix:
+        os: [ "ubuntu-latest", "macos-latest" ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v4
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+      - name: Install Bash 4 on MacOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install bash
+          echo "/usr/local/bin" >> $GITHUB_PATH
+      - name: Execute tests
+        run: |
+          ./hack/verify-taps.sh
