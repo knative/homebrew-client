@@ -1,0 +1,30 @@
+name: Update Homebrew Tap
+
+permissions:
+  contents: write
+  pull-requests: write
+
+on:
+  workflow_dispatch: # Manual workflow trigger
+  schedule:
+    - cron: 00 15 * * 4
+
+
+jobs:
+  update:
+    name: Update formula
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Execute codegen
+        run: ./hack/update-codegen.sh
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: auto/update-release
+          title: "Update kn formula to new version"
+          commit-message: "Update kn formula to new version"
+          delete-branch: true
+          body: |
+            Generate by `./hack/update-codegen.sh`. 
