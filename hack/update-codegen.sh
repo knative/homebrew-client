@@ -18,8 +18,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-[[ ! -v REPO_ROOT_DIR ]] && REPO_ROOT_DIR="$(git rev-parse --show-toplevel)"
-readonly REPO_ROOT_DIR
+
 
 # Retrieve latest version from given Knative repository tags
 # On 'main' branch the latest released version is returned
@@ -74,6 +73,7 @@ function fetch_checksums() {
   linux_amd64_checksum=$(awk '$2=="kn-linux-amd64"{print $1}' "$checksums")
   linux_arm64_checksum=$(awk '$2=="kn-linux-arm64"{print $1}' "$checksums")
 
+  rm -r "${checksums}"
 }
 
 # Generate file based on the inlined HEREDOC template.
@@ -127,9 +127,30 @@ end
 EOF
 }
 
-pushd $REPO_ROOT_DIR
+
 
 # The script is meant to be executed though GH action to generate content update and review in the PR.
+
+[[ ! -v REPO_ROOT_DIR ]] && REPO_ROOT_DIR="$(git rev-parse --show-toplevel)"
+readonly REPO_ROOT_DIR
+
+# If OVERRIDE_RELEASE_VERSION is provided only kn.rb file is regenerated based on the provided value.
+# Accepts plain numeric semver with or wwihout leading v, e.g. `1.13.0` and `v1.13.0`.
+# In addition also Knative tag format `knative-v1.y.z` as well, e.g. `knative-v1.13.0`
+# Variant for older version won't be created.
+readonly OVERRIDE_RELEASE_VERSION=${OVERRIDE_RELEASE_VERSION:-}
+
+pushd $REPO_ROOT_DIR
+
+if [[ -n "${OVERRIDE_RELEASE_VERSION}"  ]]; then
+  version_string=${OVERRIDE_RELEASE_VERSION##knative-v}
+  version_string=${version_string##v}
+  echo "Generating kn.rb based on provided override version: ${version_string}"
+  fetch_checksums "${version_string}"
+  generate_tap_file "kn.rb" "${version_string}"
+
+  exit 0
+fi
 
 # Get sem ver from kn.rb file, in format x.y.z
 current_homebrew_version=$(cat "kn.rb" | grep "kn_version:" | cut -d ':' -f2)
@@ -140,6 +161,7 @@ latest_release_version=$(get_latest_release_version "knative" "client")
 if (( $(minor_version "$current_homebrew_version") == $(minor_version "$latest_release_version") )); then
   if (( $(patch_version "$current_homebrew_version") == $(patch_version "$latest_release_version") )); then
     echo "Current kn.rb in up to date with latest release: ${latest_release_version}"
+    echo "No changes made."
     exit 0
   else
     echo "Newer patch release is available: ${latest_release_version}"
