@@ -14,10 +14,10 @@ class KnAT16 < Formula
     sha256 "88f38ef23fe28b7036847c34744180da5d7b6be63caf425a6b2733fd4004f9b1"
   elsif OS.linux? && Hardware::CPU.arm?
     url "https://github.com/knative/client/releases/download/#{v}/kn-linux-arm64"
-    sha256 "c683911d14c05430be9dd810481dbce178193a39e59ee5e5b1c1b0aff4bcc009"
+    sha256 "a50ffcbcd78cb0a2aae36c89463d8b91908120d6676a0119badde4574e923f52"
   else
     url "https://github.com/knative/client/releases/download/#{v}/kn-linux-amd64"
-    sha256 "a50ffcbcd78cb0a2aae36c89463d8b91908120d6676a0119badde4574e923f52"
+    sha256 "c683911d14c05430be9dd810481dbce178193a39e59ee5e5b1c1b0aff4bcc009"
   end
 
   def install
