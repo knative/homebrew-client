@@ -65,9 +65,10 @@ function patch_version() {
 
 # Generate file based on the inlined HEREDOC template.
 function generate_tap_file() {
-  out=$1
-  version=$2
-  old_formula=${3:-""}
+  local out=$1
+  local version=$2
+  local old_formula=${3:-""}
+  local darwin_amd64_checksum darwin_arm64_checksum linux_amd64_checksum linux_arm64_checksum
 
   # Fetch checksum file from release and parse values
   checksums=$(mktemp)
