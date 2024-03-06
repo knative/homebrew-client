@@ -63,24 +63,22 @@ function patch_version() {
   echo "${tokens[2]}"
 }
 
-# Fetch checksum file from release and populate.
-function fetch_checksums() {
-  checksums=$(mktemp)
-  curl -fsSL "https://github.com/knative/client/releases/download/knative-v${1}/checksums.txt" > "$checksums"
-
-  darwin_amd64_checksum=$(awk '$2=="kn-darwin-amd64"{print $1}' "$checksums")
-  darwin_arm64_checksum=$(awk '$2=="kn-darwin-arm64"{print $1}' "$checksums")
-  linux_amd64_checksum=$(awk '$2=="kn-linux-amd64"{print $1}' "$checksums")
-  linux_arm64_checksum=$(awk '$2=="kn-linux-arm64"{print $1}' "$checksums")
-
-  rm -r "${checksums}"
-}
-
 # Generate file based on the inlined HEREDOC template.
 function generate_tap_file() {
   out=$1
   version=$2
   old_formula=${3:-""}
+
+  # Fetch checksum file from release and parse values
+  checksums=$(mktemp)
+  curl -fsSL "https://github.com/knative/client/releases/download/knative-v${2}/checksums.txt" > "$checksums"
+  darwin_amd64_checksum=$(awk '$2=="kn-darwin-amd64"{print $1}' "$checksums")
+  darwin_arm64_checksum=$(awk '$2=="kn-darwin-arm64"{print $1}' "$checksums")
+  linux_amd64_checksum=$(awk '$2=="kn-linux-amd64"{print $1}' "$checksums")
+  linux_arm64_checksum=$(awk '$2=="kn-linux-arm64"{print $1}' "$checksums")
+  # Cleanup temp file
+  rm "${checksums}"
+
 cat <<EOF > "$out"
 # Generated through hack/update-codegen.sh. Don't edit manually.
 # Next line is used to identify version of the file.
@@ -127,8 +125,6 @@ end
 EOF
 }
 
-
-
 # The script is meant to be executed though GH action to generate content update and review in the PR.
 
 [[ ! -v REPO_ROOT_DIR ]] && REPO_ROOT_DIR="$(git rev-parse --show-toplevel)"
@@ -146,7 +142,6 @@ if [[ -n "${OVERRIDE_RELEASE_VERSION}"  ]]; then
   version_string=${OVERRIDE_RELEASE_VERSION##knative-v}
   version_string=${version_string##v}
   echo "Generating kn.rb based on provided override version: ${version_string}"
-  fetch_checksums "${version_string}"
   generate_tap_file "kn.rb" "${version_string}"
 
   exit 0
@@ -165,7 +160,6 @@ if (( $(minor_version "$current_homebrew_version") == $(minor_version "$latest_r
     exit 0
   else
     echo "Newer patch release is available: ${latest_release_version}"
-    fetch_checksums "${latest_release_version}"
     # Regenerate main kn.rb file to update patch version
     generate_tap_file "kn.rb" "${latest_release_version}"
   fi
@@ -175,13 +169,8 @@ else
   # Generate definition for older release first
   current_minor=$(minor_version "$current_homebrew_version")
   old_file="kn@1.${current_minor}.rb"
-  fetch_checksums "${current_homebrew_version}"
   generate_tap_file "${old_file}" "${current_homebrew_version}" "AT1${current_minor}"
 
   # Regenerate the main kn.rb file
-  fetch_checksums "${latest_release_version}"
   generate_tap_file "kn.rb" "${latest_release_version}"
 fi
-
-echo "Please, make sure to commit all generated files."
-
