@@ -18,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Execute codegen
-        run: ./hack/update-codegen.sh
+        run: ./hack/update-taps.sh
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
