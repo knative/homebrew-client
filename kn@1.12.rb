@@ -1,3 +1,6 @@
+# Generated through hack/update-codegen.sh. Don't edit manually.
+# Next line is used to identify version of the file.
+# kn_version:1.12.0
 require "fileutils"
 
 class KnAT112 < Formula
