@@ -1,26 +1,26 @@
 # Generated through hack/update-codegen.sh. Don't edit manually.
 # Next line is used to identify version of the file.
-# kn_version:1.19.0
+# kn_version:1.18.0
 require "fileutils"
 
-class Kn < Formula
+class KnAT118 < Formula
   homepage "https://github.com/knative/client"
 
-  v = "knative-v1.19.0"
+  v = "knative-v1.18.0"
   version v
 
   if OS.mac? && Hardware::CPU.intel?
     url "https://github.com/knative/client/releases/download/#{v}/kn-darwin-amd64"
-    sha256 "5beb28756bc8a0538a30394c59a05046257d85caac3aa71e5245e8151bbc6e52"
+    sha256 "8aedb15a73b0c2676f3c006db153f17fa528bd99a4fe5ffd76bab3a82f956ac6"
   elsif OS.mac? && Hardware::CPU.arm?
     url "https://github.com/knative/client/releases/download/#{v}/kn-darwin-arm64"
-    sha256 "10498147432a2fe80079dba49764748499a1531a9bf2028a2608a22fb02cb855"
+    sha256 "9be7e4e2ad865145cfb0f2cfbc6ba4283de99f37209cd0f2566a88a2763e2ac9"
   elsif OS.linux? && Hardware::CPU.arm?
     url "https://github.com/knative/client/releases/download/#{v}/kn-linux-arm64"
-    sha256 "17daf99dc3058082cfea4842b4c6c448b219d4e8f4201113dbadc22c3d06b43e"
+    sha256 "f0e07ad56c9f814b01f35481a59eb0cd93a5c9df24b418e5dde044b924bec7a2"
   else
     url "https://github.com/knative/client/releases/download/#{v}/kn-linux-amd64"
-    sha256 "2b016a7cc4a3f047023234ece54fb350d392003531fa94e0099d11bc3282d721"
+    sha256 "e5952304f91fdbb6532613cbab3e91e0b46be0f4bdcf0af62191de381116ca4e"
   end
 
   def install
