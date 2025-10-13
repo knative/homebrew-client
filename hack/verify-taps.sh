@@ -28,13 +28,30 @@ function verify_install() {
   pushd "${REPO_ROOT_DIR}"
   local failed=()
 
+  # Create a local tap of this repo to install the local formulae
+  local tap_name="knative/kn-test"
+  local tap_path="$(brew --repository)/Library/Taps/knative/homebrew-kn-test"
+
+  # Clean up any existing test tap
+  if [ -L "${tap_path}" ] || [ -d "${tap_path}" ]; then
+    rm -rf "${tap_path}"
+  fi
+
+  # Create a tap by symlinking this repo
+  mkdir -p "$(dirname "${tap_path}")"
+  ln -s "${REPO_ROOT_DIR}" "${tap_path}"
+
+  echo "Created local tap: ${tap_name}"
+  echo "Tap path: ${tap_path}"
+
   for filename in *.rb; do
       local name
       name=$(echo "${filename}" | cut -d '.' -f1 | cut -d '@' -f1)
 
-      echo "Installing from: ${filename}"
+      echo "Installing from tap: ${tap_name}/${name}"
+      echo "Formula file: ${filename}"
 
-      brew install -v --formula ./"${filename}" --force || echo "Failed: ${filename}"
+      brew install -v "${tap_name}/${name}" --force || echo "Failed: ${filename}"
 
       if ! command -v kn >/dev/null; then
           echo "Binary $name from $filename not found. Installation probably failed."
@@ -46,8 +63,12 @@ function verify_install() {
       fi
 
       # Remove to not clash with other version, continue
-      brew remove -v --formula "${filename}" --force || echo "Failed uninstall: ${filename}"
+      brew uninstall -v "${name}" --force || echo "Failed uninstall: ${name}"
   done
+
+  # Clean up the test tap
+  rm -rf "${tap_path}"
+  echo "Cleaned up local tap"
 
   if (( ${#failed[@]} > 0 )); then
     echo "#####"
