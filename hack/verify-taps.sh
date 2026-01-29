@@ -46,7 +46,7 @@ function verify_install() {
 
   for filename in *.rb; do
       local name
-      name=$(echo "${filename}" | cut -d '.' -f1 | cut -d '@' -f1)
+      name="${filename%.rb}"
 
       echo "Installing from tap: ${tap_name}/${name}"
       echo "Formula file: ${filename}"
