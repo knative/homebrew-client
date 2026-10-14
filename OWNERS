@@ -1,5 +1,5 @@
 approvers:
+- steering-committee
 - client-writers
-- technical-oversight-committee
 - knative-release-leads
 
