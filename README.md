@@ -10,8 +10,7 @@ brew tap knative/client
 
 The supported clients are:
 
-* [kn](https://github.com/knative/client) - The Knative CLI client
-
+- [kn](https://github.com/knative/client) - The Knative CLI client
 
 Install them with `brew install` like in
 
